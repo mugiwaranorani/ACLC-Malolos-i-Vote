@@ -1,0 +1,1 @@
+<marquee id="notice" class="fs-4" width="100%" direction="left" height="40px" style="position:fixed; display: none; color:red; "></marquee>

@@ -1,0 +1,269 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial;
+}
+
+/**************************** HOME START ****************************/
+
+.home-content{
+  box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+  border-radius: 15px;
+}
+
+/**************************** HOME END ****************************/
+
+/**************************** Navigation bar START ****************************/
+.nav li{
+  display: inline-block;
+}
+
+.nav-head{
+  display: inline-block;
+  flex: 100%;
+}
+/**************************** Navigation bar END ****************************/
+
+/**************************** Candidates START ****************************/
+
+.card{
+  box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+  transition: 0.3s;
+  border-radius: 7px;
+  text-align: center;
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
+.card_size{
+  max-width: 225px;
+  display: flex;
+
+}
+
+.card:hover{
+  box-shadow: 5px 5px 5px 0px rgba(0,0,0,1);
+  bottom: 2px;
+  right: 2px;
+}
+
+.con{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.candidate_img{
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+
+
+@media screen and (max-width: 700px) {
+  .con{
+    align-items: center;
+    text-align: center;
+  }
+  
+  .container{
+    align-items: center;
+    text-align: center;
+    
+  }
+}
+
+/**************************** Candidates END ****************************/
+
+/**************************** Content START ****************************/
+
+.side {
+  flex: 30%; 
+  background-color: skyblue; 
+  padding: 20px; 
+}
+
+/* Main column */
+.main {
+  flex: 70%;
+  flex: 70%;
+  background-color: #71A24C; 
+  padding: 20px;
+}
+
+.full-main{
+  /*flex: 100%;*/
+  padding: 10px;
+  margin: 0;
+  flex: 1;
+}
+
+
+
+/**************************** Content END ****************************/
+
+/**************************** ACLC AND SC LOGO START ****************************/
+
+.x{
+  display: flex;
+}
+ 
+@media screen and (max-width: 700px) {
+  .x{
+    display: flex;
+    justify-content: space-between;
+  }
+}  
+
+/**************************** ACLC AND SC LOGO END ****************************/
+
+/**************************** MINI CARD START ****************************/
+
+.vote-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  height: 100px;
+  width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+  transition: 0.3s;
+  margin: 10px;
+}
+
+.box:hover {
+  box-shadow: 0px 0px 4px 1px rgba(0,0,0,1);
+}
+
+.box img {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  border: 1px solid;
+  object-fit: cover;
+  margin-left: 5px;
+}
+
+.box-info {
+  font-size: 14px;
+  margin-left: 8px;
+}
+@media screen and (max-width: 1507px) {
+  .vote-container{
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .box{
+    margin: 10px;
+    padding: 5px;
+  }
+}
+
+
+/**************************** MINI CARD END ****************************/
+
+/**************************** DEFAULT MINI CARD START ****************************/
+
+.vote-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.default-box {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  height: 60px;
+  width: 250px;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid;
+  transition: 0.3s;
+  margin: 10px;
+}
+
+.default-box:hover {
+  background-color: #999;
+}
+
+.default-box img {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  border: 1px solid;
+  object-fit: cover;
+  margin-left: 5px;
+}
+
+.default-box-info {
+  font-size: 14px;
+  margin-left: 8px;
+}
+@media screen and (max-width: 1507px) {
+  .vote-container{
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .box{
+    margin: 10px;
+    padding: 5px;
+  }
+}
+
+/**************************** DEFAULT MINI CARD END ****************************/
+
+/**************************** RESULT IMAGES START ****************************/
+
+.imgCon{
+  box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+}
+
+.imgResult{
+  height : 500px; 
+  object-fit: cover;
+}
+
+.tableImg{
+  height: 27px;
+  width: 27px;
+  border-radius: 50%;
+  border: 1px solid;
+  object-fit: cover;
+  margin-left: 5px;
+}
+
+/**************************** RESULT IMAGES END ****************************/
+
+
+
+
+
+
+/**************************** ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ****************************/
+
+
+/**************************** ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ADMIN ****************************/
+

@@ -1,0 +1,53 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  display: flex;
+  flex: 100%;
+  font-family: Arial;
+}
+
+.log-btn{
+  background-color: green;
+  color: white;
+  border-radius: 25px;
+  border: none;
+  text-decoration: none;
+}
+.log-btn:hover{
+  background-color: green;
+  opacity: 0.8;
+}
+
+.log-btn:active{
+  background-color: green;
+  opacity: 0.7;
+}
+
+.back-btn{
+  background-color: red;
+  color: white;
+  border-radius: 25px;
+  border: none;
+  text-decoration: none;
+}
+
+.back-btn:hover{
+  background-color: red;
+  opacity: 0.8;
+}
+
+.back-btn:active{
+  background-color: red;
+  opacity: 0.7;
+}
+
+.footer{
+  display: block;
+  flex: 100%;
+  background-color: green;
+}
+

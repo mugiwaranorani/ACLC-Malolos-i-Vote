@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="CSS/style.css" rel="stylesheet">
+    <style>
+      .content-shadow{
+        box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+        border-radius: 15px;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+      .line-shadow{
+        box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.5);
+        border-radius: 15px;
+      }
+    </style>
+    <script src="https://kit.fontawesome.com/29e9a0be55.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <title>College SC Election Result</title>
+    <link rel="icon" type="image/x-icon" href="ACLCLOGO/logo3.jpeg">
+</head>
+<body>
+    
+<div class="full-main">
+
+<?php include 'time.php'?>
+
+<div class="container-fluid x" id="lockpage">
+  <?php include "schoolLogo.php"?>
+</div>
+  
+<hr>
+
+<?php include 'messageNotice.php'; ?>
+
+<div id="darkOverlay" class="dark-overlay" style="display:none;">
+  <i class="fa-solid fa-lock fa-bounce lock-icon"></i>
+</div>
+
+<div class="container">
+    <?php			
+      include ('dbconn.php');
+      $sql = "SELECT * FROM clg_title WHERE titlePage='Result'";
+      $result = $conn->query($sql);
+                  
+      if ($result->num_rows > 0) {
+        while($row = $result->fetch_array()){
+    ?>
+
+
+      <h1><strong><b><?php echo $row['title']?></strong></b></h1>
+
+    <?php	
+      }		
+      $conn->close(); 
+      }
+    ?>
+</div>
+
+      <div class="container">
+        <div class="nav nav-pills d-flex flex-column flex-xxl-row overflow-auto" role="tablist" style="height:51px;">
+
+          <div class="nav-item">
+            <a class="nav-link active" data-bs-toggle="pill" href="#slideshow">Slide Show Result</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-bs-toggle="pill" href="#table">Table Result</a>
+          </div>
+
+        </div>
+      </div>
+
+        <div class="container text-center fs-4">
+          <?php
+            include ('dbconn.php');
+
+            $voterCountQuery = "SELECT * FROM clg_voter";
+            $voterResult = $conn->query($voterCountQuery);
+            $voterCount=$voterResult->num_rows;	
+
+            $votedCountQuery = "SELECT voteStatus FROM clg_voter WHERE voteStatus = 'Voted'";
+            $votedCountResult = $conn->query($votedCountQuery);
+            $votedCount=$votedCountResult->num_rows;	
+          ?>
+          <p><i class="fa-solid fa-user-check" style="font-size:25px"></i> Voted Status: <?php echo $votedCount; ?>/<?php echo $voterCount; ?></p>
+        </div>
+      
+  
+      <div class="tab-content mb-3">
+        <div id="slideshow" class="tab-pane fade show active">
+          <div class="container">
+            <div class="row d-flex justify-content-around">
+
+              <!--SLIDESHOW CONTENT START-->
+              <!--PARTY LIST A IMAGE AND INFO VOTES SLIDES START-->
+              <div class="col-sm-4">
+                <h2 class="d-flex justify-content-center"><i>PARTY LIST A</i></h2>
+                <div id="partylista" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner rounded imgCon">
+                    <?php
+                      include ('dbconn.php');
+                      
+                      // Define the positions to display the star icon for
+                      $positions = array('PRESIDENT', 'VICE PRESIDENT', 'SECRETARY', 'TREASURER', 'COLLEGE REP');
+                      
+                      // Loop through the positions and get the maximum vote count for each position
+                      foreach ($positions as $position) {
+                        $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = '$position'";
+                        $result = mysqli_query($conn, $query);
+                        $row = mysqli_fetch_assoc($result);
+                        $max_vote_counts[$position] = $row['max_vote_count'];
+                      }
+                      
+                      $sql = "SELECT * FROM clg_candidates WHERE partyList = 'PARTY LIST A'";
+                      $result = $conn->query($sql);
+                              
+                      if ($result->num_rows > 0) {
+                        while($row = $result->fetch_array()) {
+                          $vote_count = $row['voteCount'];
+                          $position = $row['position'];
+                          $max_vote_count = $max_vote_counts[$position];
+                          $star_icon = ($vote_count == $max_vote_count && in_array($position, $positions) && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:24px; color: yellow;'></i>" : "";
+                    ?>
+                    <div class="carousel-item active">
+                      <img src="uploads/<?php echo $row['picture']?>" class="imgResult d-block w-100" alt="candidate photo">
+                      <div class="carousel-caption d-md-block bg-primary text-light border border-light rounded content-shadow p-1">
+                        <h3>
+                          <strong>
+                            <b>
+                            <?php echo $row['position']?>
+                              <br>VOTES [<?php echo $row['voteCount']?>]<?php echo $star_icon; ?>
+                            </b>
+                          </strong>
+                        </h3>
+                        <h4><strong><b>Name: </strong></b><?php echo $row['name']; ?></h4>
+                      </div>
+                    </div>
+                    
+                    <?php	
+                      }		
+                      $conn->close();
+                      }
+                    ?>
+                  </div>
+
+                  <button class="carousel-control-prev" type="button" data-bs-target="#partylista" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="display:none;"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#partylista" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="display:none;"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+
+              <script src="collegeResultRT.js"></script>
+              
+              <!--PARTY LIST A IMAGE AND INFO VOTES SLIDES END-->
+              <!--PARTY LIST B IMAGE AND INFO VOTES SLIDES START-->
+              <div class="col-sm-4">
+                <h2 class="d-flex justify-content-center"><i>PARTY LIST B</i></h2>
+                <div id="partylistb" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner rounded imgCon">
+                    <?php
+                      include ('dbconn.php');
+                      
+                      // Define the positions to display the star icon for
+                      $positions = array('PRESIDENT', 'VICE PRESIDENT', 'SECRETARY', 'TREASURER', 'COLLEGE REP');
+                      
+                      // Loop through the positions and get the maximum vote count for each position
+                      foreach ($positions as $position) {
+                        $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = '$position'";
+                        $result = mysqli_query($conn, $query);
+                        $row = mysqli_fetch_assoc($result);
+                        $max_vote_counts[$position] = $row['max_vote_count'];
+                      }
+                      
+                      $sql = "SELECT * FROM clg_candidates WHERE partyList = 'PARTY LIST B'";
+                      $result = $conn->query($sql);
+                              
+                      if ($result->num_rows > 0) {
+                        while($row = $result->fetch_array()) {
+                          $vote_count = $row['voteCount'];
+                          $position = $row['position'];
+                          $max_vote_count = $max_vote_counts[$position];
+                          $star_icon = ($vote_count == $max_vote_count && in_array($position, $positions) && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:24px; color: yellow;'></i>" : "";
+                    ?>
+                    <div class="carousel-item active">
+                      <img src="uploads/<?php echo $row['picture']?>" class="imgResult d-block w-100" alt="candidate photo">
+                      <div class="carousel-caption d-md-block bg-primary text-light border border-light rounded content-shadow p-1">
+                        <h3>
+                          <strong>
+                            <b>
+                            <?php echo $row['position']?>
+                              <br>VOTES [<?php echo $row['voteCount']?>]<?php echo $star_icon; ?>
+                            </b>
+                          </strong>
+                        </h3>
+                        <h4><strong><b>Name: </strong></b><?php echo $row['name']?></h4>
+                      </div>
+                    </div>
+                    <?php	
+                      }		
+                      $conn->close();
+                      }
+                    ?>
+                  </div>
+
+                  <button class="carousel-control-prev" type="button" data-bs-target="#partylistb" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="display:none;"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#partylistb" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="display:none;"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            
+            </div>
+          </div>  
+        </div>
+        <!--PARTY LIST B IMAGE AND INFO VOTES SLIDES END-->
+        <!--SLIDESHOW CONTENT END-->
+        
+        <!--TABLE CONTENT START-->
+        <div id="table" class="tab-pane table-responsive fade">
+          <div class="container">
+
+            <div class="col-sm-12 col-lg-12 d-flex justify-content-center">
+              <form action="#searchResult" method="post" class="d-flex">
+                <input class="form-control me-2" name="search" type="search" placeholder="Search Here" aria-label="Search" style="border: 1px solid;">
+                <button class="btn btn-outline-success" name="searchbtn" type="submit">Search</button>
+              </form>
+            </div>
+            
+            <br>
+
+            <?php
+              if (isset($_POST['searchbtn'])) {
+                $search = $_POST['search'];
+            ?>
+            
+              <table class="table table-responsive table-hover table-dark rounded" style="overflow: hidden;">
+                <thead>
+                  <tr>
+                    <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Position</th>
+                    <th scope="col">Party List</th>
+                    <th scope="col">Vote(s)</th>
+                  </tr>
+                </thead>
+                <tbody>
+              
+                  <?php
+                    include ('dbconn.php');
+
+                    $positions = array('PRESIDENT', 'VICE PRESIDENT', 'SECRETARY', 'TREASURER', 'COLLEGE REP');
+                      
+                      // Loop through the positions and get the maximum vote count for each position
+                      foreach ($positions as $position) {
+                        $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = '$position'";
+                        $result = mysqli_query($conn, $query);
+                        $row = mysqli_fetch_assoc($result);
+                        $max_vote_counts[$position] = $row['max_vote_count'];
+                      }
+                    
+                    $searchQuery = "SELECT * FROM clg_candidates WHERE name LIKE '%{$search}%' OR position LIKE '%{$search}%' OR partyList LIKE '%{$search}%'  OR voteCount LIKE '%{$search}%'";
+                    $searchResult = mysqli_query($conn, $searchQuery);
+                    $searchCount=$searchResult->num_rows;
+                    $i = 1;
+                    
+                    if (mysqli_num_rows($searchResult) > 0) {
+                  ?>
+
+                    <div class="container line-shadow p-3 mb-4">
+                      <h3> Search Result: "<?php echo $search; ?>" <?php echo $searchCount; ?> item(s) Found!</h3>									
+                      <a class="btn btn-outline-danger" href="result.php">Clear Search</a>
+                    </div>
+
+                  <?php
+                    while ($row = mysqli_fetch_assoc($searchResult)) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && in_array($position, $positions) && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                  ?>
+
+                    <tr>
+                      <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                      <td><?php echo $row['name']?></td>
+                      <td><?php echo $row['position']?></td>
+                      <td><?php echo $row['partyList']?></td>
+                      <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                    </tr>
+
+                  <?php
+                    $i++;
+                    }
+                    $conn->close();
+                    }else{
+                  ?>
+
+                    <div class="container line-shadow p-3 mb-4">
+                      <h3> Search Result: "<?php echo $search; ?>" <?php echo $searchCount; ?> item(s) Found!</h3>									
+                      <a class="btn btn-outline-danger" href="result.php">Clear Search</a>
+                    </div>
+
+                  <?php
+                    }
+                  ?>
+
+                </tbody>
+              </table>
+
+            <?php
+              }else{
+            ?>
+
+            <h3><i>PRESIDENT(S)</i></h3>
+
+            <table class="table table-responsive table-hover table-dark rounded" style="overflow: hidden;">
+              <thead>
+                <tr>
+                  <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Party List</th>
+                  <th scope="col">Vote(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php			
+                  include ('dbconn.php');
+
+                  $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = 'PRESIDENT'";
+                  $result = mysqli_query($conn, $query);
+                  $row = mysqli_fetch_assoc($result);
+                  $max_vote_counts['PRESIDENT'] = $row['max_vote_count'];
+                  
+                  $sql = "SELECT * FROM clg_candidates WHERE position = 'PRESIDENT'";
+                  $result = $conn->query($sql);
+                          
+                  if ($result->num_rows > 0) {
+                    while($row = $result->fetch_array()) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && $row['position'] == 'PRESIDENT' && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                ?>
+                <tr>
+                  <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                  <td><?php echo $row['name']?></td>
+                  <td><?php echo $row['position']?></td>
+                  <td><?php echo $row['partyList']?></td>
+                  <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                </tr>
+                <?php	
+                  }		
+                  $conn->close();
+                  }
+                ?> 
+              </tbody>
+            </table>
+
+            <hr>
+
+            <h3><i>VICE PRESIDENT(S)</i></h3>
+
+            <table class="table table-hover table-dark rounded" style="overflow: hidden;">
+              <thead>
+                <tr>
+                  <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Party List</th>
+                  <th scope="col">Vote(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php			
+                  include ('dbconn.php');
+                  
+                  $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = 'VICE PRESIDENT'";
+                  $result = mysqli_query($conn, $query);
+                  $row = mysqli_fetch_assoc($result);
+                  $max_vote_counts['VICE PRESIDENT'] = $row['max_vote_count'];
+                  
+                  $sql = "SELECT * FROM clg_candidates WHERE position = 'VICE PRESIDENT'";
+                  $result = $conn->query($sql);
+                          
+                  if ($result->num_rows > 0) {
+                    while($row = $result->fetch_array()) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && $row['position'] == 'VICE PRESIDENT' && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                ?>
+                <tr>
+                  <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                  <td><?php echo $row['name']?></td>
+                  <td><?php echo $row['position']?></td>
+                  <td><?php echo $row['partyList']?></td>
+                  <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                </tr>
+                <?php	
+                  }		
+                  $conn->close();
+                  }
+                ?> 
+              </tbody>
+            </table>
+
+            <hr>
+
+            <h3><i>SECRETARY(S)</i></h3>
+
+            <table class="table table-hover table-dark rounded" style="overflow: hidden;">
+              <thead>
+                <tr>
+                  <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Party List</th>
+                  <th scope="col">Vote(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php			
+                  include ('dbconn.php');
+                  
+                  $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = 'SECRETARY'";
+                  $result = mysqli_query($conn, $query);
+                  $row = mysqli_fetch_assoc($result);
+                  $max_vote_counts['SECRETARY'] = $row['max_vote_count'];
+                  
+                  $sql = "SELECT * FROM clg_candidates WHERE position = 'SECRETARY'";
+                  $result = $conn->query($sql);
+                          
+                  if ($result->num_rows > 0) {
+                    while($row = $result->fetch_array()) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && $row['position'] == 'SECRETARY' && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                ?>
+                <tr>
+                  <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                  <td><?php echo $row['name']?></td>
+                  <td><?php echo $row['position']?></td>
+                  <td><?php echo $row['partyList']?></td>
+                  <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                </tr>
+                <?php	
+                  }		
+                  $conn->close();
+                  }
+                ?> 
+              </tbody>
+            </table>
+
+            <hr>
+
+            <h3><i>TREASURER(S)</i></h3>
+
+            <table class="table table-hover table-dark rounded" style="overflow: hidden;">
+              <thead>
+                <tr>
+                  <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Party List</th>
+                  <th scope="col">Vote(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php			
+                  include ('dbconn.php');
+                  
+                  $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = 'TREASURER'";
+                  $result = mysqli_query($conn, $query);
+                  $row = mysqli_fetch_assoc($result);
+                  $max_vote_counts['TREASURER'] = $row['max_vote_count'];
+                  
+                  $sql = "SELECT * FROM clg_candidates WHERE position = 'TREASURER'";
+                  $result = $conn->query($sql);
+                          
+                  if ($result->num_rows > 0) {
+                    while($row = $result->fetch_array()) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && $row['position'] == 'TREASURER' && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                ?>
+                <tr>
+                  <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                  <td><?php echo $row['name']?></td>
+                  <td><?php echo $row['position']?></td>
+                  <td><?php echo $row['partyList']?></td>
+                  <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                </tr>
+                <?php	
+                  }		
+                  $conn->close();
+                  }
+                ?> 
+              </tbody>
+            </table>
+
+            <h3><i>COLLEGE REPRESENTATIVE(S)</i></h3>
+
+            <table class="table table-hover table-dark rounded" style="overflow: hidden;">
+              <thead>
+                <tr>
+                  <th scope="col"><img src="ACLCLOGO/logo3.jpeg" alt="School Logo" style="width: 16px;"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Party List</th>
+                  <th scope="col">Vote(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php			
+                  include ('dbconn.php');
+                  
+                  $query = "SELECT MAX(voteCount) AS max_vote_count FROM clg_candidates WHERE position = 'COLLEGE REP'";
+                  $result = mysqli_query($conn, $query);
+                  $row = mysqli_fetch_assoc($result);
+                  $max_vote_counts['COLLEGE REP'] = $row['max_vote_count'];
+                  
+                  $sql = "SELECT * FROM clg_candidates WHERE position = 'COLLEGE REP'";
+                  $result = $conn->query($sql);
+                          
+                  if ($result->num_rows > 0) {
+                    while($row = $result->fetch_array()) {
+                      $vote_count = $row['voteCount'];
+                      $position = $row['position'];
+                      $max_vote_count = $max_vote_counts[$position];
+                      $star_icon = ($vote_count == $max_vote_count && $row['position'] == 'COLLEGE REP' && $vote_count > 0) ? "<i class='fas fa-star' style='font-size:14px; color: yellow;'></i>" : "";
+                ?>
+                <tr>
+                  <th scope="row"><img src="uploads/<?php echo $row['picture']?>" alt="sc candidate" class="tableImg"></th>
+                  <td><?php echo $row['name']?></td>
+                  <td><?php echo $row['position']?></td>
+                  <td><?php echo $row['partyList']?></td>
+                  <td><?php echo $row['voteCount']?> <?php echo $star_icon; ?></td>
+                </tr>
+                <?php	
+                  }		
+                  $conn->close();
+                  }
+                ?> 
+              </tbody>
+            </table>
+
+            <?php
+              }
+            ?>
+
+          </div>
+        </div>
+        <!--TABLE CONTENT END-->
+
+      </div>
+
+</body>
+</html>
